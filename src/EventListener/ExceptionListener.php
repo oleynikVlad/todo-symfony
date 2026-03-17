@@ -34,6 +34,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 #[AsEventListener(event: KernelEvents::EXCEPTION, priority: 0)]
 class ExceptionListener
 {
+    public function __construct(
+        private readonly bool $debug,
+    ) {
+    }
+
     public function __invoke(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
@@ -46,9 +51,15 @@ class ExceptionListener
             $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
 
+        // In production, hide internal error details for 500 errors to avoid leaking
+        // sensitive information (SQL queries, file paths, etc.)
+        $message = ($statusCode === Response::HTTP_INTERNAL_SERVER_ERROR && !$this->debug)
+            ? 'Internal server error.'
+            : $exception->getMessage();
+
         $data = [
             'error' => true,
-            'message' => $exception->getMessage(),
+            'message' => $message,
             'code' => $statusCode,
         ];
 
