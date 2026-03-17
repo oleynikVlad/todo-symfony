@@ -256,8 +256,11 @@ class TodoController extends AbstractController
 
         $dto = new UpdateTodoRequest();
         $dto->title = $data['title'] ?? null;
+        $dto->titleProvided = array_key_exists('title', $data);
         $dto->description = $data['description'] ?? null;
+        $dto->descriptionProvided = array_key_exists('description', $data);
         $dto->status = $data['status'] ?? null;
+        $dto->statusProvided = array_key_exists('status', $data);
 
         $errors = $this->validator->validate($dto);
         if (count($errors) > 0) {

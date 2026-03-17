@@ -22,4 +22,14 @@ class UpdateTodoRequest
         message: 'Status must be one of: pending, in_progress, completed.',
     )]
     public ?string $status = null;
+
+    /**
+     * Track which fields were explicitly provided in the request.
+     * This distinguishes "field not sent" (null, not provided) from
+     * "field explicitly set to null" (null, provided) — allowing users
+     * to clear a description by sending {"description": null}.
+     */
+    public bool $titleProvided = false;
+    public bool $descriptionProvided = false;
+    public bool $statusProvided = false;
 }

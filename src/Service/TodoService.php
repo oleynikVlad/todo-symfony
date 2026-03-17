@@ -95,13 +95,13 @@ class TodoService
     {
         $todo = $this->getTodo($id, $user);
 
-        if ($dto->title !== null) {
+        if ($dto->titleProvided && $dto->title !== null) {
             $todo->setTitle($dto->title);
         }
-        if ($dto->description !== null) {
+        if ($dto->descriptionProvided) {
             $todo->setDescription($dto->description);
         }
-        if ($dto->status !== null) {
+        if ($dto->statusProvided && $dto->status !== null) {
             $todo->setStatus($dto->status);
         }
 
