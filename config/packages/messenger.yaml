@@ -1,0 +1,26 @@
+# Symfony Messenger Configuration
+#
+# LARAVEL vs SYMFONY — Queues & Async:
+# - Laravel: config/queue.php with drivers (redis, database, sqs)
+#   Jobs implement ShouldQueue interface.
+#   Worker: php artisan queue:work
+#
+# - Symfony: config/packages/messenger.yaml with transports (doctrine, redis, amqp)
+#   Messages are plain PHP classes.
+#   Worker: php bin/console messenger:consume async
+
+framework:
+    messenger:
+        failure_transport: failed
+
+        transports:
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 3
+                    delay: 1000
+                    multiplier: 2
+            failed: 'doctrine://default?queue_name=failed'
+
+        routing:
+            App\Message\TodoCreatedNotification: async
