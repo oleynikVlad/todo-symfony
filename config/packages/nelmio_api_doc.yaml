@@ -1,0 +1,25 @@
+# Swagger / OpenAPI Documentation Configuration
+#
+# LARAVEL vs SYMFONY — API Documentation:
+# - Laravel: Uses packages like L5-Swagger or Scramble
+# - Symfony: NelmioApiDocBundle with OpenApi PHP attributes
+#
+# Access Swagger UI at: /api/doc
+
+nelmio_api_doc:
+    documentation:
+        info:
+            title: 'Todo List API'
+            description: 'A Symfony 6+ Todo List API with JWT authentication. Built as a learning project for Laravel developers transitioning to Symfony.'
+            version: '1.0.0'
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+        security:
+            - Bearer: []
+    areas:
+        path_patterns:
+            - ^/api(?!/doc)
