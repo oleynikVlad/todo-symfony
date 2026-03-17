@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: todo_php
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+      - redis
+    environment:
+      - APP_ENV=dev
+      - DATABASE_URL=postgresql://app:secret@database:5432/todo_db?serverVersion=16&charset=utf8
+      - MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=true
+      - REDIS_URL=redis://redis:6379
+    networks:
+      - todo_network
+
+  database:
+    image: postgres:16-alpine
+    container_name: todo_database
+    environment:
+      POSTGRES_DB: todo_db
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - todo_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: todo_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - todo_network
+
+volumes:
+  db_data:
+
+networks:
+  todo_network:
+    driver: bridge

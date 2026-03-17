@@ -1,0 +1,20 @@
+# Cache Configuration
+#
+# LARAVEL vs SYMFONY — Caching:
+# - Laravel: Cache::put('key', 'value', $seconds), Cache::get('key')
+#   config/cache.php with drivers: file, redis, memcached, database
+#   Facade: Cache::remember('key', 60, fn() => ...)
+#
+# - Symfony: CacheInterface via DI, $cache->get('key', fn() => ...)
+#   config/packages/cache.yaml with adapters: filesystem, redis, memcached
+#   No facade — inject Symfony\Contracts\Cache\CacheInterface
+
+framework:
+    cache:
+        app: cache.adapter.redis
+        default_redis_provider: '%env(REDIS_URL)%'
+
+        pools:
+            todo.cache:
+                adapter: cache.app
+                default_lifetime: 3600
